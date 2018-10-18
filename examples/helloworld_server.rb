@@ -11,7 +11,6 @@ class GreeterServer < Helloworld::Greeter::Service
   end
 end
 
-server = Griffin::Server.new
+server = Griffin::Server.new(host: '127.0.0.1', port: 50051)
 server.handle(GreeterServer.new)
-
-server.start
+server.run
