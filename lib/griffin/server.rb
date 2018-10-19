@@ -9,36 +9,37 @@ module Griffin
     DEFAULT_WORKER_SIZE = 10
     DEFAULT_BACKLOG_SIZE = 1024
 
-    def initialize(host:, port:, worker_size: DEFAULT_WORKER_SIZE, backlog: DEFAULT_BACKLOG_SIZE, **opts)
-      @host = host
-      @port = port
+    def initialize(worker_size: DEFAULT_WORKER_SIZE, **opts)
       @worker_size = worker_size
       @server = GrpcKit::Server.new
-      @backlog = backlog
       @opts = opts
       @shutdown, @signal = IO.pipe
-      @socks = [] << @shutdown
+      @socks = []
+      @socks << @shutdown
     end
 
     def handle(handler)
       @server.handle(handler)
     end
 
-    def run(blocking: true)
-      install_signal
+    def run(sock, blocking: true)
+      @socks << sock
 
       @thread_pool = Griffin::ThreadPool.new(@worker_size) do |conn|
         @server.session_start(conn)
       end
 
       @server.run
-      add_listner(@host, @port)
 
       if blocking
         handle_server
       else
         Thread.new { handle_server }
       end
+    end
+
+    def shutdown
+      @shutdown << 'finish'
     end
 
     private
@@ -55,7 +56,7 @@ module Griffin
           begin
             bench do
               conn = sock.accept_nonblock
-              @thread_pool.schedule(conn)
+              @thread_pool.schedule(conn[0])
             end
           rescue IO::WaitReadable, Errno::EINTR
             # nothing
@@ -70,26 +71,6 @@ module Griffin
         yield
       end
       puts result
-    end
-
-    def add_listner(host, port)
-      sock = TCPServer.new(host, port)
-      if true # TODO
-        sock.setsockopt(Socket::IPPROTO_TCP, Socket::TCP_NODELAY, 1)
-      end
-      sock.setsockopt(Socket::SOL_SOCKET, Socket::SO_REUSEADDR, true)
-      sock.listen(@backlog)
-      @socks << sock
-    end
-
-    def install_signal
-      trap('INT') do
-        @shutdown << 'int singal'
-      end
-
-      trap('TERM') do
-        @shutdown << 'term singal'
-      end
     end
   end
 end

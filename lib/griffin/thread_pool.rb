@@ -67,7 +67,7 @@ module Griffin
           begin
             @block.call(task)
           rescue Exception => e # rubocop:disable Lint/RescueException
-            Griffin.logger.error("An error occured on top level in worker #{Thread.current.name}: #{Thread.backtrace} #{e.message} (#{e.class}) ")
+            Griffin.logger.error("An error occured on top level in worker #{Thread.current.name}: #{e.message} (#{e.class})\n #{Thread.current.backtrace.join("\n")}  ")
           ensure
             @semaphore.signal
           end

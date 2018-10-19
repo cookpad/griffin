@@ -11,6 +11,12 @@ class GreeterServer < Helloworld::Greeter::Service
   end
 end
 
-server = Griffin::Server.new(host: '127.0.0.1', port: 50051)
-server.handle(GreeterServer.new)
-server.run
+config = Griffin.build_server_config do |c|
+  c.bind '127.0.0.1'
+
+  c.port 50051
+
+  c.services GreeterServer.new
+end
+
+Griffin::Launcher.new(config).launch
