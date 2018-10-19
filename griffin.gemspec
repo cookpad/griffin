@@ -27,6 +27,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec'
   spec.add_development_dependency 'rubocop'
 
-  spec.add_dependency 'grpc_kit', '~> 0.1.0'
+  spec.add_dependency 'grpc_kit', '~> 0.1.2'
   spec.add_dependency 'serverengine', '~> 2.0.7'
 end
