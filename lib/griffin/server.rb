@@ -26,10 +26,8 @@ module Griffin
       @socks << sock
 
       @thread_pool = Griffin::ThreadPool.new(@worker_size) do |conn|
-        @server.session_start(conn)
+        @server.run(conn)
       end
-
-      @server.run
 
       if blocking
         handle_server
@@ -38,8 +36,8 @@ module Griffin
       end
     end
 
-    def shutdown
-      @shutdown << 'finish'
+    def shutdown(reason = :graceful)
+      @shutdown.write(reason)
     end
 
     private

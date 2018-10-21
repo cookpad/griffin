@@ -12,7 +12,8 @@ module Griffin
     end
 
     def run
-      server.grpc_server.run(@socket.create_listener)
+      @sock = @socket.create_listener
+      server.grpc_server.run(@sock)
     end
 
     def after_fork
@@ -20,6 +21,7 @@ module Griffin
 
     def stop
       server.grpc_server.shutdown
+      @sock.close
     end
 
     def reload
