@@ -8,23 +8,26 @@ module Griffin
       @socket = Griffin::Socket.new(config[:bind], config[:port])
     end
 
-    def before_fork
-    end
-
     def run
-      @sock = @socket.create_listener
-      server.grpc_server.run(@sock)
-    end
-
-    def after_fork
+      @listener = @socket.create_listener
+      begin
+        server.grpc_server.run(@listener)
+      ensure
+        @listener.close
+      end
     end
 
     def stop
       server.grpc_server.shutdown
-      @sock.close
     end
 
-    def reload
-    end
+    # def after_fork
+    # end
+
+    # def before_fork
+    # end
+
+    # def reload
+    # end
   end
 end

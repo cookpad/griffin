@@ -9,17 +9,24 @@ module Griffin
     DEFAULT_WORKER_SIZE = 10
     DEFAULT_BACKLOG_SIZE = 1024
 
+    GRACEFUL_SHUTDOWN = '0'
+    FORCIBLE_SHUTDOWN = '1'
+
     def initialize(worker_size: DEFAULT_WORKER_SIZE, **opts)
       @worker_size = worker_size
       @server = GrpcKit::Server.new
       @opts = opts
-      @shutdown, @signal = IO.pipe
+      @command, @signal = IO.pipe
       @socks = []
-      @socks << @shutdown
+      @socks << @command
+      @status = :run
     end
 
     def handle(handler)
       @server.handle(handler)
+      handler.class.rpc_descs.each do |path, _|
+        Griffin.logger.debug("Handle #{path}")
+      end
     end
 
     def run(sock, blocking: true)
@@ -36,19 +43,19 @@ module Griffin
       end
     end
 
-    def shutdown(reason = :graceful)
-      @shutdown.write(reason)
+    def shutdown(reason = GRACEFUL_SHUTDOWN)
+      @signal.write(reason)
     end
 
     private
 
     def handle_server
-      loop do
+      while @status == :run
         io = IO.select(@socks, [], [])
 
         io[0].each do |sock|
-          if sock == @shutdown
-            break
+          if sock == @command
+            break if handle_command
           end
 
           begin
@@ -60,6 +67,21 @@ module Griffin
             # nothing
           end
         end
+      end
+    end
+
+    def handle_command
+      case @command.read(1)
+      when FORCIBLE_SHUTDOWN
+        Griffin.logger.info('Shuting down sever forcibly...')
+
+        @status = :halt
+        @server.graceful_shutdown
+        true
+      when GRACEFUL_SHUTDOWN
+        Griffin.logger.info('Shuting down sever gracefully...')
+        @status = :stop
+        true
       end
     end
 

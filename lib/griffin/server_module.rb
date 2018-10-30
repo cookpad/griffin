@@ -17,16 +17,17 @@ module Griffin
       end
     end
 
-    def after_start
+    def stop(stop_graceful)
+      super # needed
     end
 
-    def restart
-    end
+    # def after_start
+    # end
 
-    def stop
-    end
+    # def restart
+    # end
 
-    def reload_config
-    end
+    # def reload_config
+    # end
   end
 end
