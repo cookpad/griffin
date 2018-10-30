@@ -19,7 +19,8 @@ module Griffin
       if true # TODO
         sock.setsockopt(::Socket::IPPROTO_TCP, ::Socket::TCP_NODELAY, 1)
       end
-      sock.setsockopt(::Socket::SOL_SOCKET, ::Socket::SO_REUSEADDR, true)
+      sock.setsockopt(::Socket::SOL_SOCKET, ::Socket::SO_REUSEPORT, true)
+
       sock.bind(Addrinfo.tcp(@host, @port))
       sock.listen(@backlog)
       sock
