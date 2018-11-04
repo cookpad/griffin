@@ -68,6 +68,10 @@ module Griffin
           end
         end
       end
+
+      @thread_pool.shutdown
+      # unless @sever.session_count == 0
+      # end
     end
 
     def handle_command

@@ -44,6 +44,7 @@ module Griffin
     def shutdown
       @shutdown = true
       @pool_size.times { @tasks.push(nil) }
+      sleep 1 until @worker.empty
     end
 
     private
