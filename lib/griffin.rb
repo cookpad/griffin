@@ -10,4 +10,8 @@ module Griffin
   def self.logger
     @logger ||= Logger.new(STDOUT, level: :info)
   end
+
+  def self.logger=(logger)
+    @logger = logger
+  end
 end
