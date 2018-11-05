@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'griffin/socket'
-
 module Griffin
   class ServerConfigBuilder
     SERVERENGINE_PRIMITIVE_CONFIGS = %i[workers bind port log pid_path].freeze

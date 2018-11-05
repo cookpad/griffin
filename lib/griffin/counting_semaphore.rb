@@ -5,7 +5,6 @@ module Griffin
     def initialize(size)
       @size = size
       @queue = Queue.new
-      # whatever value
       @size.times { @queue.push(0) }
     end
 

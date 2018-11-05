@@ -2,6 +2,8 @@
 
 require 'grpc_kit'
 
+require 'griffin/engine'
+require 'griffin/server_config_builder'
 require 'griffin/thread_pool'
 
 module Griffin
@@ -11,6 +13,21 @@ module Griffin
 
     GRACEFUL_SHUTDOWN = '0'
     FORCIBLE_SHUTDOWN = '1'
+
+    class << self
+      def run
+        c = config_builder.build
+        Griffin::Engine.start(c, cluster: Integer(c[:workers]) > 1)
+      end
+
+      def configure
+        yield(config_builder)
+      end
+
+      def config_builder
+        @config_builder ||= Griffin::ServerConfigBuilder.new
+      end
+    end
 
     def initialize(worker_size: DEFAULT_WORKER_SIZE, **opts)
       @worker_size = worker_size
@@ -59,11 +76,10 @@ module Griffin
           end
 
           begin
-            bench do
-              conn = sock.accept_nonblock
-              @thread_pool.schedule(conn[0])
-            end
-          rescue IO::WaitReadable, Errno::EINTR
+            conn = sock.accept_nonblock
+            @thread_pool.schedule(conn[0])
+          rescue IO::WaitReadable, Errno::EINTR => e
+            Griffin.logger.debug("Error raised #{e}")
             # nothing
           end
         end
@@ -87,14 +103,6 @@ module Griffin
         @status = :stop
         true
       end
-    end
-
-    def bench
-      require 'benchmark'
-      result = Benchmark.realtime do
-        yield
-      end
-      puts result
     end
   end
 end

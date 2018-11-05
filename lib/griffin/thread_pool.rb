@@ -44,7 +44,7 @@ module Griffin
     def shutdown
       @shutdown = true
       @pool_size.times { @tasks.push(nil) }
-      sleep 1 until @worker.empty
+      sleep 1 until @workers.empty?
     end
 
     private
@@ -74,7 +74,7 @@ module Griffin
           end
         end
 
-        Griffin.logger.info("worker #{Thread.current.name} is stopping")
+        Griffin.logger.debug("worker #{Thread.current.name} is stopping")
         @mutex.synchronize do
           @spawned -= 1
           @workers.delete(worker)
