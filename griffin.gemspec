@@ -10,8 +10,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ['ganmacs']
   spec.email         = ['ganmacs@gmail.com']
 
-  spec.summary       = 'Send and Receive RPCs from Ruby'
-  spec.description   = 'Send and Receive RPCs from Ruby'
+  spec.summary       = 'gRPC server and client for Ruby'
+  spec.description   = 'gRPC server and client for Ruby'
   spec.homepage      = 'https://github.com/ganmacs/griffin'
   spec.license       = 'MIT'
 
