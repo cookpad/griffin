@@ -29,6 +29,8 @@ module Griffin
       end
     end
 
+    attr_writer :worker_id
+
     def initialize(worker_size: DEFAULT_WORKER_SIZE, **opts)
       @worker_size = worker_size
       @server = GrpcKit::Server.new
@@ -37,6 +39,7 @@ module Griffin
       @socks = []
       @socks << @command
       @status = :run
+      @worker_id = 0
     end
 
     def handle(handler)
@@ -93,13 +96,13 @@ module Griffin
     def handle_command
       case @command.read(1)
       when FORCIBLE_SHUTDOWN
-        Griffin.logger.info('Shuting down sever forcibly...')
+        Griffin.logger.info("Shuting down sever(id=#{@worker_id}) forcibly...")
 
         @status = :halt
         @server.graceful_shutdown
         true
       when GRACEFUL_SHUTDOWN
-        Griffin.logger.info('Shuting down sever gracefully...')
+        Griffin.logger.info("Shuting down sever(id=#{@worker_id}) gracefully...")
         @status = :stop
         true
       end

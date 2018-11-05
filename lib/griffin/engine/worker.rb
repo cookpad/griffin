@@ -9,6 +9,10 @@ module Griffin
         @listener = Griffin::Listener.new(@config[:bind], @config[:port])
       end
 
+      def after_fork
+        server.core.worker_id = worker_id
+      end
+
       def run
         server.core.run(@listener.listen)
       end
@@ -18,7 +22,6 @@ module Griffin
         server.core.shutdown
       end
 
-      # def after_fork; end
       # def before_fork; end
       # def reload; end
     end

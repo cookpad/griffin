@@ -25,7 +25,7 @@ module Griffin
 
       @sock.bind(Addrinfo.tcp(@host, @port))
       @sock.listen(@backlog)
-      Griffin.logger.info("Start listening #{@hsot}:#{@port}")
+      Griffin.logger.info("Start listening #{@host}:#{@port}")
       @sock
     end
 

@@ -53,7 +53,7 @@ module Griffin
     def spawn_thread
       @spawned += 1
       worker = Thread.new(@spawned) do |i|
-        Thread.current.name = "Griffin worker #{i}"
+        Thread.current.name = "Griffin worker thread #{i}"
         Griffin.logger.debug("#{Thread.current.name} started")
 
         loop do
@@ -75,7 +75,7 @@ module Griffin
           end
         end
 
-        Griffin.logger.debug("worker #{Thread.current.name} is stopping")
+        Griffin.logger.debug("worker thread #{Thread.current.name} is stopping")
         @mutex.synchronize do
           @spawned -= 1
           @workers.delete(worker)
