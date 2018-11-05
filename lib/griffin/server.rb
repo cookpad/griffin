@@ -29,15 +29,10 @@ module Griffin
       end
     end
 
-    attr_writer :worker_id
-
     def initialize(worker_size: DEFAULT_WORKER_SIZE, **opts)
       @worker_size = worker_size
       @server = GrpcKit::Server.new
       @opts = opts
-      @command, @signal = IO.pipe
-      @socks = []
-      @socks << @command
       @status = :run
       @worker_id = 0
     end
@@ -47,6 +42,15 @@ module Griffin
       handler.class.rpc_descs.each do |path, _|
         Griffin.logger.debug("Handle #{path}")
       end
+    end
+
+    def before_run(worker_id = 0)
+      @worker_id = worker_id
+
+      # To separete fd with other forked process
+      @socks = []
+      @command, @signal = IO.pipe
+      @socks << @command
     end
 
     def run(sock, blocking: true)
@@ -91,18 +95,21 @@ module Griffin
       @thread_pool.shutdown
       # unless @sever.session_count == 0
       # end
+
+      @command.close
+      @signal.close
     end
 
     def handle_command
       case @command.read(1)
       when FORCIBLE_SHUTDOWN
-        Griffin.logger.info("Shuting down sever(id=#{@worker_id}) forcibly...")
+        Griffin.logger.info("Shutting down sever(id=#{@worker_id}) forcibly...")
 
         @status = :halt
         @server.graceful_shutdown
         true
       when GRACEFUL_SHUTDOWN
-        Griffin.logger.info("Shuting down sever(id=#{@worker_id}) gracefully...")
+        Griffin.logger.info("Shutting down sever(id=#{@worker_id}) gracefully...")
         @status = :stop
         true
       end

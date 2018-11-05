@@ -22,6 +22,8 @@ module Griffin
         end
 
         install_handler
+
+        @server.before_run
         @server.run(@listener.listen)
       end
 

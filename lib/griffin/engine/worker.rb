@@ -4,25 +4,23 @@ require 'griffin/listener'
 
 module Griffin
   module Engine
-    module WorkerModule
-      def initialize
-        @listener = Griffin::Listener.new(@config[:bind], @config[:port])
-      end
-
-      def after_fork
-        server.core.worker_id = worker_id
+    module Worker
+      def before_fork
+        @listener = Griffin::Listener.new(config[:bind], config[:port])
+        server.core.before_run(worker_id)
       end
 
       def run
         server.core.run(@listener.listen)
+      ensure
+        @listener.close
       end
 
       def stop
-        @listener.close
         server.core.shutdown
       end
 
-      # def before_fork; end
+      # def after_fork; end
       # def reload; end
     end
   end
