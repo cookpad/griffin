@@ -19,7 +19,6 @@ module Griffin
       worker_process_name: 'griffin worker',
       daemonize: false,
       log: '-', # STDOUT
-      # log: 'acess.log', # STDOUT
       worker_type: 'process',
       workers: 1,
       bind: '0.0.0.0',
