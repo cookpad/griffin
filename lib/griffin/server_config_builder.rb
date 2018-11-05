@@ -41,8 +41,8 @@ module Griffin
       end
     end
 
-    def services(*serv)
-      @opts[:services] = serv
+    def services(serv, *rest)
+      @opts[:services] = Array(serv) + rest
     end
 
     def build
