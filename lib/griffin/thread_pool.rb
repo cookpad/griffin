@@ -12,7 +12,7 @@ module Griffin
       @queue_size = queue_size
       @block = block
       @shutdown = false
-      @semaphore = Griffin::CountingSemaphore.new(@pool_size)
+      @semaphore = Griffin::CountingSemaphore.new(queue_size)
       @tasks = Queue.new
 
       @spawned = 0
@@ -31,6 +31,7 @@ module Griffin
         raise "scheduling new task isn't allowed during shutdown"
       end
 
+      # TODO: blocking now..
       @semaphore.wait
       @tasks.push(block || task)
 
