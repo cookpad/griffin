@@ -4,6 +4,7 @@ require 'logger'
 require 'grpc_kit'
 
 require 'griffin/server'
+require 'griffin/client'
 require 'griffin/version'
 
 module Griffin
