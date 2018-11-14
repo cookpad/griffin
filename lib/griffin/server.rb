@@ -8,7 +8,6 @@ require 'griffin/thread_pool'
 
 module Griffin
   class Server
-    DEFAULT_WORKER_SIZE = 10
     DEFAULT_BACKLOG_SIZE = 1024
 
     GRACEFUL_SHUTDOWN = '0'
@@ -29,8 +28,8 @@ module Griffin
       end
     end
 
-    def initialize(worker_size: DEFAULT_WORKER_SIZE, **opts)
-      @worker_size = worker_size
+    def initialize(pool_size:, **opts)
+      @worker_size = pool_size
       @server = GrpcKit::Server.new
       @opts = opts
       @status = :run

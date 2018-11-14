@@ -6,7 +6,15 @@ module Griffin
     SERVERENGINE_BLOCK_CONFIGS = %i[before_fork after_fork].freeze
     # Users can't change these values
     SERVERENGIEN_FIXED_CONFIGS = %i[daemonize worker_type worker_process_name].freeze
-    GRIFFIN_CONFIGS = %i[thread_pool].freeze
+
+    # The default size of thread pool
+    DEFAULT_POOL_SIZE = 10
+
+    GRIFFIN_CONFIGS = [
+      # The size of thread pool
+      :pool_size
+    ].freeze
+
     GRPC_CONFIGS = %i[services interceptors].freeze
 
     ServerConfig = Struct.new(*(SERVERENGINE_PRIMITIVE_CONFIGS + SERVERENGINE_BLOCK_CONFIGS + SERVERENGIEN_FIXED_CONFIGS + GRIFFIN_CONFIGS + GRPC_CONFIGS)) do
@@ -23,6 +31,7 @@ module Griffin
       workers: 1,
       bind: '0.0.0.0',
       port: 50051,
+      pool_size: DEFAULT_POOL_SIZE,
     }.freeze
 
     def initialize
