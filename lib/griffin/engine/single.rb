@@ -7,7 +7,11 @@ module Griffin
   module Engine
     class Single
       def self.create(config)
-        new(Griffin::Server.new(pool_size: config[:pool_size]), config)
+        serv = Griffin::Server.new(
+          pool_size: config[:pool_size],
+          interceptors: config[:interceptors],
+        )
+        new(serv, config)
       end
 
       def initialize(server, config)

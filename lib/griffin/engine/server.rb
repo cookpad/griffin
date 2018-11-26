@@ -8,7 +8,10 @@ module Griffin
       attr_reader :core, :listener
 
       def initialize
-        @core = Griffin::Server.new(pool_size: config[:pool_size])
+        @core = Griffin::Server.new(
+          pool_size: config[:pool_size],
+          interceptors: config[:interceptors]
+        )
       end
 
       def before_run

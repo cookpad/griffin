@@ -28,9 +28,11 @@ module Griffin
       end
     end
 
-    def initialize(pool_size:, **opts)
+    # @param pool_size [Integer] Worker thread size
+    # @param interceptors [Array<GrpcKit::GRPC::ServerInterceptor>] list of interceptors
+    def initialize(pool_size:, interceptors: nil, **opts)
       @worker_size = pool_size
-      @server = GrpcKit::Server.new
+      @server = GrpcKit::Server.new(interceptors: interceptors)
       @opts = opts
       @status = :run
       @worker_id = 0
