@@ -2,7 +2,7 @@
 
 $LOAD_PATH.unshift File.expand_path('./examples/routeguide')
 
-require 'grpc_kit'
+require 'griffin'
 require 'pry'
 require 'json'
 require 'routeguide_services_pb'
@@ -17,6 +17,8 @@ class Server < Routeguide::RouteGuide::Service
       features = JSON.parse(f.read)
       @features = Hash[features.map { |x| [x['location'], x['name']] }]
     end
+
+    @route_notes = Hash.new { |h, k| h[k] = [] }
   end
 
   def get_feature(point, ctx)
@@ -70,6 +72,21 @@ class Server < Routeguide::RouteGuide::Service
     )
   end
 
+  def route_chat(call)
+    loop do
+      rn = call.recv
+      @logger.info("route_note location=#{rn.location.inspect}, message=#{rn.message}")
+      key = "#{rn.location.latitude} #{rn.location.longitude}"
+      saved_msgs = @route_notes[key]
+      @route_notes[key] << rn.message
+
+      saved_msgs.each do |m|
+        n = Routeguide::RouteNote.new(location: rn.location, message: m)
+        call.send_msg(n)
+      end
+    end
+  end
+
   private
 
   COORD_FACTOR = 1e7
@@ -99,20 +116,27 @@ class Server < Routeguide::RouteGuide::Service
   end
 end
 
-sock = TCPServer.new(50051)
+# require 'griffin/interceptors/server/payload_interceptor'
+require 'griffin/interceptors/server/filtered_payload_interceptor'
+require 'griffin/interceptors/server/logging_interceptor'
+require 'griffin/interceptors/server/x_request_id_interceptor'
 
-opts = {}
+interceptors = [
+  Griffin::Interceptors::Server::FilteredPayloadInterceptor.new,
+  Griffin::Interceptors::Server::LoggingInterceptor.new,
+  Griffin::Interceptors::Server::XRequestIdInterceptor.new,
+]
 
-if ENV['GRPC_INTERCEPTOR']
-  require_relative 'interceptors/server_logging_interceptor'
-  opts[:interceptors] = [LoggingInterceptor.new]
+Griffin::Server.configure do |c|
+  c.bind '127.0.0.1'
+
+  c.port 50051
+
+  c.services Server.new
+
+  c.interceptors interceptors
+
+  c.workers 2
 end
 
-server = GrpcKit::Server.new(**opts)
-server.handle(Server.new)
-server.run
-
-loop do
-  conn = sock.accept
-  server.session_start(conn)
-end
+Griffin::Server.run
