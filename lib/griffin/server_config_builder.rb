@@ -32,6 +32,7 @@ module Griffin
       bind: '0.0.0.0',
       port: 50051,
       pool_size: DEFAULT_POOL_SIZE,
+      interceptors: [],
     }.freeze
 
     def initialize
