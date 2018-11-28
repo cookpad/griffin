@@ -16,6 +16,10 @@ module Griffin
     class << self
       def run
         c = config_builder.build
+        if c[:services].empty?
+          raise 'Required at least one service to handle reqeust'
+        end
+
         Griffin::Engine.start(c, cluster: Integer(c[:workers]) > 1)
       end
 
