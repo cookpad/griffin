@@ -33,13 +33,14 @@ module Griffin
       port: 50051,
       pool_size: DEFAULT_POOL_SIZE,
       interceptors: [],
+      services: [],
     }.freeze
 
     def initialize
       @opts = DEFAULT_SERVER_CONFIG.dup
     end
 
-    (SERVERENGINE_PRIMITIVE_CONFIGS + GRIFFIN_CONFIGS + [:interceptors]).each do |name|
+    (SERVERENGINE_PRIMITIVE_CONFIGS + GRIFFIN_CONFIGS).each do |name|
       define_method(name) do |value|
         @opts[name] = value
       end
@@ -51,8 +52,12 @@ module Griffin
       end
     end
 
-    def services(serv, *rest)
-      @opts[:services] = Array(serv) + rest
+    def interceptors(*value)
+      @opts[:interceptors].concat(value).flatten!
+    end
+
+    def services(*value)
+      @opts[:services].concat(value).flatten!
     end
 
     def build
