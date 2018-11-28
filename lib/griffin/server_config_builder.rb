@@ -2,7 +2,7 @@
 
 module Griffin
   class ServerConfigBuilder
-    SERVERENGINE_PRIMITIVE_CONFIGS = %i[workers bind port log pid_path log_level].freeze
+    SERVERENGINE_PRIMITIVE_CONFIGS = %i[workers bind port log pid_path log_level logger].freeze
     SERVERENGINE_BLOCK_CONFIGS = %i[before_fork after_fork].freeze
     # Users can't change these values
     SERVERENGIEN_FIXED_CONFIGS = %i[daemonize worker_type worker_process_name].freeze
