@@ -101,10 +101,8 @@ module Griffin
         end
       end
 
+      # Need Timeout?
       @thread_pool.shutdown
-      # unless @sever.session_count == 0
-      # end
-
       @command.close
       @signal.close
     end

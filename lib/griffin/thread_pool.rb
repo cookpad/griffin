@@ -45,7 +45,10 @@ module Griffin
     def shutdown
       @shutdown = true
       @pool_size.times { @tasks.push(nil) }
-      sleep 1 until @workers.empty?
+      until @workers.empty?
+        Griffin.logger.debug("#{@pool_size - @spawned} worker thread(s) shutdowned, waiting #{@spawned}")
+        sleep 1
+      end
     end
 
     private
