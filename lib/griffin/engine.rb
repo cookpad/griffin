@@ -9,7 +9,7 @@ require 'griffin/engine/worker'
 module Griffin
   module Engine
     def self.start(config, cluster: false)
-      Griffin.logger = Griffin::Logger.create(config)
+      Griffin::Logger.setup(config)
 
       if cluster
         Griffin.logger.info("Griffin v#{Griffin::VERSION} starts as cluster mode")
