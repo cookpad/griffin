@@ -14,13 +14,16 @@ module Griffin
     FORCIBLE_SHUTDOWN = '1'
 
     class << self
-      def run
+      # @param bind [String]
+      # @param port [Integer,String]
+      def run(bind: nil, port: nil)
         c = config_builder.build
         if c[:services].empty?
           raise 'Required at least one service to handle reqeust'
         end
 
-        Griffin::Engine.start(c, cluster: Integer(c[:workers]) > 1)
+        opts = { bind: bind, port: port }.compact
+        Griffin::Engine.start(c.merge(opts), cluster: Integer(c[:workers]) > 1)
       end
 
       def configure
