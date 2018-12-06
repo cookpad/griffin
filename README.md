@@ -59,10 +59,6 @@ Griffin::Server.run
 bundle install
 ```
 
-## Requirements
-
-* [nghttp2](https://nghttp2.org/)
-
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/ganmacs/griffin.
