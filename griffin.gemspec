@@ -29,6 +29,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rubocop'
 
   spec.add_dependency 'connection_pool', '~> 2.2.2'
-  spec.add_dependency 'grpc_kit', '=> 0.1.13'
+  spec.add_dependency 'grpc_kit', '>= 0.2.0'
   spec.add_dependency 'serverengine', '~> 2.0.7'
 end

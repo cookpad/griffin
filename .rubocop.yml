@@ -29,10 +29,16 @@ Style/IfUnlessModifier:
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: comma
 
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: comma
+
 Style/TrailingCommaInArguments:
   EnforcedStyleForMultiline: comma
 
 Style/SafeNavigation:
+  Enabled: false
+
+Style/WhileUntilModifier:
   Enabled: false
 
 Naming/PredicateName:

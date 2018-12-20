@@ -20,6 +20,7 @@ class Server < Routeguide::RouteGuide::Service
   end
 
   def get_feature(point, ctx)
+    GRPC.logger.info('===== get_feature =====')
     name = @features.fetch({ 'longitude' => point.longitude, 'latitude' => point.latitude }, '')
     GRPC.logger.info("Point longitude=#{point.longitude}, latitude=#{point.latitude}, metadata=#{ctx.metadata}")
     Routeguide::Feature.new(location: point, name: name)
@@ -48,8 +49,7 @@ class Server < Routeguide::RouteGuide::Service
     start_at = Time.now.to_i
     last = nil
 
-    loop do
-      point = stream.recv # XXX: raise StopIteration
+    stream.each do |point|
       GRPC.logger.info(point)
 
       count += 1
@@ -71,8 +71,8 @@ class Server < Routeguide::RouteGuide::Service
   end
 
   def route_chat(call)
-    loop do
-      rn = call.recv
+    GRPC.logger.info('===== record_chat =====')
+    call.each do |rn|
       GRPC.logger.info("route_note location=#{rn.location.inspect}, message=#{rn.message}")
       key = "#{rn.location.latitude} #{rn.location.longitude}"
       saved_msgs = @route_notes[key]
@@ -120,6 +120,11 @@ Griffin::Server.configure do |c|
   c.port 50051
 
   c.services Server.new
+
+  if ENV['GRPC_INTERCEPTOR']
+    require_relative 'interceptors/server_logging_interceptor'
+    c.interceptors [LoggingInterceptor.new]
+  end
 
   c.workers 2
 end

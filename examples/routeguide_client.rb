@@ -14,8 +14,8 @@ PORT = 50051
 def get_feature(stub)
   GRPC.logger.info('===== get_feature =====')
   points = [
-    Routeguide::Point.new(latitude:  409_146_138, longitude: -746_188_906),
-    Routeguide::Point.new(latitude:  0, longitude: 0)
+    Routeguide::Point.new(latitude: 409_146_138, longitude: -746_188_906),
+    Routeguide::Point.new(latitude: 0, longitude: 0),
   ]
 
   points.each do |pt|
@@ -36,9 +36,7 @@ def list_features(stub)
   )
 
   stream = stub.list_features(rect)
-
-  loop do
-    r = stream.recv
+  stream.each do |r|
     GRPC.logger.info("Found #{r.name} at #{r.location.inspect}")
   end
 end
@@ -55,13 +53,13 @@ def record_route(stub, size)
   size.times do
     location = features.sample['location']
     point = Routeguide::Point.new(latitude: location['latitude'], longitude: location['longitude'])
-    puts "Next point is #{point.inspect}"
+    GRPC.logger.info("Next point is #{point.inspect}")
     stream.send_msg(point)
     sleep(rand(0..1))
   end
 
-  resp = stream.close_and_recv
-  puts "summary: #{resp[0].inspect}"
+  resp = stream.recv
+  GRPC.logger.info("summary: #{resp.inspect}")
 end
 
 ROUTE_CHAT_NOTES = [
@@ -79,9 +77,8 @@ def route_chat(stub)
   call = stub.route_chat({})
 
   t = Thread.new do
-    loop do
-      rn = call.recv
-      GRPC.logger.info("Got message #{rn.message} at point point(#{rn.location.latitude}, #{rn.location.longitude})")
+    call.each do |rn|
+      GRPC.logger.info("Got message #{rn.message} at point (#{rn.location.latitude}, #{rn.location.longitude})")
     end
   end
 
