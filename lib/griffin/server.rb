@@ -46,8 +46,8 @@ module Griffin
     end
 
     def handle(handler)
+      @server.handle(handler)
       klass = handler.is_a?(Class) ? handler : handler.class
-      @server.handle(klass)
       klass.rpc_descs.each_key do |path|
         Griffin.logger.info("Handle #{path}")
       end
