@@ -37,7 +37,7 @@ module Grpc
           status = @statuses["#{req.service}"]
         end
         if status.nil?
-          fail GRPC::BadStatus.new_status_exception(StatusCodes::NOT_FOUND)
+          fail GRPC::NotFound.new("Service is not found: #{req.service}")
         end
         HealthCheckResponse.new(status: status)
       end
