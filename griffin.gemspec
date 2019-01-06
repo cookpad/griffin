@@ -7,7 +7,7 @@ require 'griffin/version'
 Gem::Specification.new do |spec|
   spec.name          = 'griffin'
   spec.version       = Griffin::VERSION
-  spec.authors       = ['ganmacs']
+  spec.authors       = ['Yuta Iwama']
   spec.email         = ['ganmacs@gmail.com']
 
   spec.summary       = 'gRPC server and client for Ruby'
