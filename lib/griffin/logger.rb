@@ -14,7 +14,7 @@ module Griffin
         end
         # Not to set a logger to `Grpckit.logger` since `Grpckit.logger` prints many HTTP2 layer logs
         # If you want to print them, add environment variable `GRPC_KIT_LOGLEVEL=debug`
-        GrpcKit::GRPC.extend(m)
+        GrpcKit::Grpc.extend(m)
       end
 
       def create(config)
