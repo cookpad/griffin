@@ -13,7 +13,7 @@ module Griffin
 
       if cluster
         Griffin.logger.info("Griffin v#{Griffin::VERSION} starts as cluster mode")
-        ServerEngine.create(Griffin::Engine::Server, Griffin::Engine::Worker, config).run
+        ServerEngine.create(Griffin::Engine::Server, Griffin::Engine::Worker, config).main
       else
         Griffin.logger.info("Griffin v#{Griffin::VERSION} starts as single mode")
         Griffin::Engine::Single.create(config).run
