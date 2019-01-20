@@ -113,11 +113,13 @@ module Griffin
         Griffin.logger.info("Shutting down sever(id=#{@worker_id}) forcibly...")
 
         @status = :halt
-        @server.graceful_shutdown
+        @server.force_shutdown
         true
       when GRACEFUL_SHUTDOWN
         Griffin.logger.info("Shutting down sever(id=#{@worker_id}) gracefully...")
+
         @status = :stop
+        @server.graceful_shutdown
         true
       end
     end
