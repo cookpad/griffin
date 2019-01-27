@@ -65,8 +65,8 @@ module Griffin
     def run(sock, blocking: true)
       @socks << sock
 
-      @thread_pool = Griffin::ThreadPool.new(@worker_size) do |conn|
-        @server.run(conn)
+      @thread_pool = Griffin::ThreadPool.new(max: @worker_size) do |conn|
+        @server.run(conn, pool: pool)
       end
 
       if blocking
