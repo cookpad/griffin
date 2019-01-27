@@ -8,7 +8,8 @@ module Griffin
     class Single
       def self.create(config)
         serv = Griffin::Server.new(
-          pool_size: config[:pool_size],
+          min_pool_size: config[:min_pool_size],
+          max_pool_size: config[:max_pool_size],
           interceptors: config[:interceptors],
         )
         new(serv, config)

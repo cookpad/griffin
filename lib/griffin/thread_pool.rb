@@ -6,14 +6,14 @@ module Griffin
   class ThreadPool
     DEFAULT_MAX = 5
     DEFAULT_MIN = 1
-    QUEUE_SIZE = 100
+    QUEUE_SIZE = 128
 
     def initialize(interval: 60, max: DEFAULT_MAX, min: DEFAULT_MIN, &block)
       @max_pool_size = max
       @min_pool_size = min
       @block = block
       @shutdown = false
-      @tasks = SizedQueue.new(DEFAULT_QUEUE_SIZE)
+      @tasks = SizedQueue.new(QUEUE_SIZE)
 
       @spawned = 0
       @workers = []

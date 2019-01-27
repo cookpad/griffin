@@ -10,7 +10,9 @@ module Griffin
       def initialize
         @core = Griffin::Server.new(
           pool_size: config[:pool_size],
-          interceptors: config[:interceptors]
+          min_pool_size: config[:min_pool_size],
+          max_pool_size: config[:max_pool_size],
+          interceptors: config[:interceptors],
         )
       end
 
