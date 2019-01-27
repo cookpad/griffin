@@ -1,21 +1,19 @@
 # frozen_string_literal: true
 
-require 'griffin/counting_semaphore'
 require 'grpc_kit/thread_pool/auto_trimmer'
 
 module Griffin
   class ThreadPool
     DEFAULT_MAX = 5
     DEFAULT_MIN = 1
-    DEFAULT_QUEUE_SIZE = 100
+    QUEUE_SIZE = 100
 
     def initialize(interval: 60, max: DEFAULT_MAX, min: DEFAULT_MIN, &block)
       @max_pool_size = max
       @min_pool_size = min
       @block = block
       @shutdown = false
-      @semaphore = Griffin::CountingSemaphore.new(max)
-      @tasks = Queue.new
+      @tasks = SizedQueue.new(DEFAULT_QUEUE_SIZE)
 
       @spawned = 0
       @workers = []
@@ -36,7 +34,6 @@ module Griffin
       end
 
       # TODO: blocking now..
-      @semaphore.wait
       @tasks.push(block || task)
 
       if @mutex.synchronize { (@waiting < @tasks.size) && (@spawned < @max_pool_size) }
@@ -86,8 +83,6 @@ module Griffin
             @block.call(task)
           rescue Exception => e # rubocop:disable Lint/RescueException
             Griffin.logger.error("An error occured on top level in worker #{Thread.current.name}: #{e.message} (#{e.class})\n #{Thread.current.backtrace.join("\n")}  ")
-          ensure
-            @semaphore.signal
           end
         end
 
