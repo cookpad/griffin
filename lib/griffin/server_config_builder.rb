@@ -9,10 +9,13 @@ module Griffin
 
     # The default size of thread pool TCP Connection
     DEFAULT_POOL_SIZE = 30
+    DEFAULT_CONNECTION_SIZE = 3
 
     GRIFFIN_CONFIGS = [
       :max_pool_size,
       :min_pool_size,
+      :max_connection_size,
+      :min_connection_size,
     ].freeze
 
     GRPC_CONFIGS = %i[services interceptors].freeze
@@ -33,6 +36,8 @@ module Griffin
       port: 50051,
       max_pool_size: DEFAULT_POOL_SIZE,
       min_pool_size: DEFAULT_POOL_SIZE,
+      max_connection_size: DEFAULT_CONNECTION_SIZE,
+      min_connection_size: DEFAULT_CONNECTION_SIZE,
       interceptors: [],
       services: [],
     }.freeze
@@ -58,6 +63,10 @@ module Griffin
       @opts[:max_pool_size] = Integer(max)
     end
 
+    def connection_size(min, max)
+      @opts[:min_connection_size] = Integer(min)
+      @opts[:max_connection_size] = Integer(max)
+    end
     def interceptors(*value)
       @opts[:interceptors].concat(value).flatten!
     end

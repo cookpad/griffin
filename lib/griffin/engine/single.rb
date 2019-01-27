@@ -10,6 +10,8 @@ module Griffin
         serv = Griffin::Server.new(
           min_pool_size: config[:min_pool_size],
           max_pool_size: config[:max_pool_size],
+          min_connection_size: config[:min_connection_size],
+          max_connection_size: config[:max_connection_size],
           interceptors: config[:interceptors],
         )
         new(serv, config)
