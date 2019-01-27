@@ -18,6 +18,7 @@ module Griffin
       @spawned = 0
       @workers = []
       @mutex = Mutex.new
+      @waiting = 0
 
       @pool_size.times { spawn_thread }
     end
@@ -46,7 +47,7 @@ module Griffin
       @shutdown = true
       @pool_size.times { @tasks.push(nil) }
       until @workers.empty?
-        Griffin.logger.debug("#{@pool_size - @spawned} worker thread(s) shutdowned, waiting #{@spawned}")
+        Griffin.logger.debug("Shutdown waiting #{@waiting} workers")
         sleep 1
       end
     end
@@ -64,7 +65,9 @@ module Griffin
             break
           end
 
+          @mutex.synchronize { @waiting += 1 }
           task = @tasks.pop
+          @mutex.synchronize { @waiting -= 1 }
           if task.nil?
             break
           end
