@@ -41,11 +41,9 @@ module Griffin
     # @param max_connection_size [Integer] Minimum connection of TCP
     # @param interceptors [Array<GrpcKit::GRPC::ServerInterceptor>] list of interceptors
     def initialize(min_pool_size:, max_pool_size:, min_connection_size:, max_connection_size:, interceptors: [], **opts)
-      @min_pool_size = min_pool_size
-      @max_pool_size = max_pool_size
       @min_connection_size = min_connection_size
       @max_connection_size = max_connection_size
-      @server = GrpcKit::Server.new(interceptors: interceptors)
+      @server = GrpcKit::Server.new(interceptors: interceptors, min_pool_size: min_pool_size, max_pool_size: max_pool_size)
       @opts = opts
       @status = :run
       @worker_id = 0
@@ -65,7 +63,6 @@ module Griffin
       # To separete fd with other forked process
       @socks = []
       @command, @signal = IO.pipe
-      @shared_pool = GrpcKit::ThreadPool.new(min: @min_pool_size, max: @max_pool_size)
       @socks << @command
     end
 
@@ -73,7 +70,7 @@ module Griffin
       @socks << sock
 
       @thread_pool = Griffin::ThreadPool.new(min: @min_connection_size, max: @max_connection_size) do |conn|
-        @server.run(conn, pool: @shared_pool)
+        @server.run(conn)
       end
 
       if blocking
