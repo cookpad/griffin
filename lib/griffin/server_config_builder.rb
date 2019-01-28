@@ -7,12 +7,15 @@ module Griffin
     # Users can't change these values
     SERVERENGIEN_FIXED_CONFIGS = %i[daemonize worker_type worker_process_name].freeze
 
-    # The default size of thread pool
-    DEFAULT_POOL_SIZE = 10
+    # The default size of thread pool TCP Connection
+    DEFAULT_POOL_SIZE = 30
+    DEFAULT_CONNECTION_SIZE = 3
 
     GRIFFIN_CONFIGS = [
-      # The size of thread pool
-      :pool_size
+      :max_pool_size,
+      :min_pool_size,
+      :max_connection_size,
+      :min_connection_size,
     ].freeze
 
     GRPC_CONFIGS = %i[services interceptors].freeze
@@ -31,7 +34,10 @@ module Griffin
       workers: 1,
       bind: '0.0.0.0',
       port: 50051,
-      pool_size: DEFAULT_POOL_SIZE,
+      max_pool_size: DEFAULT_POOL_SIZE,
+      min_pool_size: DEFAULT_POOL_SIZE,
+      max_connection_size: DEFAULT_CONNECTION_SIZE,
+      min_connection_size: DEFAULT_CONNECTION_SIZE,
       interceptors: [],
       services: [],
     }.freeze
@@ -40,7 +46,7 @@ module Griffin
       @opts = DEFAULT_SERVER_CONFIG.dup
     end
 
-    (SERVERENGINE_PRIMITIVE_CONFIGS + GRIFFIN_CONFIGS).each do |name|
+    (SERVERENGINE_PRIMITIVE_CONFIGS).each do |name|
       define_method(name) do |value|
         @opts[name] = value
       end
@@ -52,6 +58,15 @@ module Griffin
       end
     end
 
+    def pool_size(min, max)
+      @opts[:min_pool_size] = Integer(min)
+      @opts[:max_pool_size] = Integer(max)
+    end
+
+    def connection_size(min, max)
+      @opts[:min_connection_size] = Integer(min)
+      @opts[:max_connection_size] = Integer(max)
+    end
     def interceptors(*value)
       @opts[:interceptors].concat(value).flatten!
     end
