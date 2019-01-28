@@ -8,7 +8,7 @@ module Griffin
     SERVERENGIEN_FIXED_CONFIGS = %i[daemonize worker_type worker_process_name].freeze
 
     # The default size of thread pool TCP Connection
-    DEFAULT_POOL_SIZE = 30
+    DEFAULT_POOL_SIZE = 20
     DEFAULT_CONNECTION_SIZE = 3
 
     GRIFFIN_CONFIGS = [
