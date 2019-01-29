@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require 'griffin/listener'
-
 module Griffin
   module Engine
     module Server
-      attr_reader :core, :listener, :socket_manager_path
+      attr_reader :core, :socket_manager_path
 
       def initialize
         @core = Griffin::Server.new(

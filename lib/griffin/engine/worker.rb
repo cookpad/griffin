@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'griffin/listener'
-
 module Griffin
   module Engine
     module Worker

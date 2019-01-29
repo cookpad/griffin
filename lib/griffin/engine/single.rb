@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'griffin/server'
-require 'griffin/listener'
 
 module Griffin
   module Engine
