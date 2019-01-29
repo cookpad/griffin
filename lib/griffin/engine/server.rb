@@ -5,7 +5,7 @@ require 'griffin/listener'
 module Griffin
   module Engine
     module Server
-      attr_reader :core, :listener
+      attr_reader :core, :listener, :socket_manager_path
 
       def initialize
         @core = Griffin::Server.new(
@@ -16,6 +16,8 @@ module Griffin
           max_connection_size: config[:max_connection_size],
           interceptors: config[:interceptors],
         )
+        @socket_manager_path = ServerEngine::SocketManager::Server.generate_path
+        @socket_manager_server = ServerEngine::SocketManager::Server.open(@socket_manager_path)
       end
 
       def before_run
@@ -25,6 +27,7 @@ module Griffin
       end
 
       def stop(stop_graceful)
+        @socket_manager_server.close
         super # needed
       end
 

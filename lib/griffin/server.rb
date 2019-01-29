@@ -103,7 +103,7 @@ module Griffin
 
           begin
             conn = sock.accept_nonblock
-            @thread_pool.schedule(conn[0])
+            @thread_pool.schedule(conn)
           rescue IO::WaitReadable, Errno::EINTR => e
             Griffin.logger.debug("Error raised #{e}")
             # nothing
