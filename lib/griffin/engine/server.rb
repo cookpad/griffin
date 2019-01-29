@@ -25,8 +25,8 @@ module Griffin
       end
 
       def stop(stop_graceful)
-        @socket_manager_server.close
         super # needed
+        @socket_manager_server.close
       end
 
       # def after_start; end
