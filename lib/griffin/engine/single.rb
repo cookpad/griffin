@@ -20,7 +20,8 @@ module Griffin
       def initialize(server, config)
         @server = server
         @config = config
-        @listener = Griffin::Listener.new(@config[:bind], @config[:port])
+        @sock = TCPServer.new(@config[:bind], @config[:port])
+        @sock.setsockopt(Socket::IPPROTO_TCP, Socket::TCP_NODELAY, 1)
       end
 
       def run
@@ -31,7 +32,8 @@ module Griffin
         install_handler
 
         @server.before_run
-        @server.run(@listener.listen)
+        @sock.listen(Socket::SOMAXCONN)
+        @server.run(@sock)
       end
 
       def install_handler

@@ -95,9 +95,15 @@ module Griffin
             break if handle_command
           end
 
+          # @thread_pool.schedule could block and accepted socket would be timeout.
+          # So call Thread.pass other workers having resources to handle a request would accept.
+          unless @thread_pool.resouce_available?
+            break
+          end
+
           begin
             conn = sock.accept_nonblock
-            @thread_pool.schedule(conn[0])
+            @thread_pool.schedule(conn)
           rescue IO::WaitReadable, Errno::EINTR => e
             Griffin.logger.debug("Error raised #{e}")
             # nothing

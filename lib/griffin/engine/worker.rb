@@ -5,15 +5,20 @@ require 'griffin/listener'
 module Griffin
   module Engine
     module Worker
+      def initialize
+        @socket_manager = ServerEngine::SocketManager::Client.new(server.socket_manager_path)
+      end
+
       def before_fork
-        @listener = Griffin::Listener.new(config[:bind], config[:port])
         server.core.before_run(worker_id)
       end
 
       def run
-        server.core.run(@listener.listen)
+        @lsock = @socket_manager.listen_tcp(config[:bind], config[:port])
+        @lsock.setsockopt(Socket::IPPROTO_TCP, Socket::TCP_NODELAY, 1)
+        server.core.run(@lsock)
       ensure
-        @listener.close
+        @lsock.close if @lsock
       end
 
       def stop

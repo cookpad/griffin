@@ -41,6 +41,10 @@ module Griffin
       end
     end
 
+    def resouce_available?
+      (@waiting != 0) || (@spawned != @max_pool_size)
+    end
+
     def shutdown
       @shutdown = true
       @max_pool_size.times { @tasks.push(nil) }
