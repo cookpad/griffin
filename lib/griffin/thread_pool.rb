@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'grpc_kit/thread_pool/auto_trimmer'
+require 'grpc_kit/rpc_dispatcher/auto_trimmer'
 
 module Griffin
   class ThreadPool
@@ -21,7 +21,7 @@ module Griffin
       @waiting = 0
 
       @min_pool_size.times { spawn_thread }
-      @auto_trimmer = GrpcKit::ThreadPool::AutoTrimmer.new(self, interval: interval + rand(10)).tap(&:start!)
+      @auto_trimmer = GrpcKit::RpcDispatcher::AutoTrimmer.new(self, interval: interval + rand(10)).tap(&:start!)
     end
 
     def schedule(task, &block)
