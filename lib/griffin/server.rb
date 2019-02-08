@@ -12,6 +12,7 @@ module Griffin
 
     GRACEFUL_SHUTDOWN = '0'
     FORCIBLE_SHUTDOWN = '1'
+    GRACEFUL_RESTART = '2'
 
     class << self
       # @param bind [String]
@@ -130,6 +131,13 @@ module Griffin
 
         @status = :stop
         @server.graceful_shutdown
+        true
+      when GRACEFUL_RESTART
+        Griffin.logger.info("Restart sever(id=#{@worker_id}) gracefully...")
+
+        @status = :restart
+        # timeout is false since we don't know when all connections are closed by clients.
+        @server.graceful_shutdown(timeout: false)
         true
       end
     end
