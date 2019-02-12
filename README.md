@@ -2,9 +2,6 @@
 
 [![Gem Version](https://badge.fury.io/rb/griffin.svg)](https://badge.fury.io/rb/griffin)
 
-
-__UNDER DEVELOPMENT__
-
 Griffin is [gRPC](https://grpc.io/) server which supports multi process by using [serverengine](https://github.com/treasure-data/serverengine).
 Griffin also supports building gRPC client.
 
@@ -52,6 +49,10 @@ end
 Griffin::Server.run
 
 ```
+
+## Interceptors
+
+* [cookpad/griffin-interceptors](https://github.com/cookpad/griffin-interceptors) colloection of interceptors
 
 ## Development
 
