@@ -67,6 +67,7 @@ module Griffin
       @opts[:min_connection_size] = Integer(min)
       @opts[:max_connection_size] = Integer(max)
     end
+
     def interceptors(*value)
       @opts[:interceptors].concat(value).flatten!
     end
