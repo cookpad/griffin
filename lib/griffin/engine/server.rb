@@ -13,6 +13,7 @@ module Griffin
           min_connection_size: config[:min_connection_size],
           max_connection_size: config[:max_connection_size],
           interceptors: config[:interceptors],
+          settings: config[:http2_settings],
         )
         @socket_manager_path = ServerEngine::SocketManager::Server.generate_path
         @socket_manager_server = ServerEngine::SocketManager::Server.open(@socket_manager_path)
