@@ -41,7 +41,7 @@ module Griffin
     # @param min_connection_size [Integer] Maximun connection of TCP
     # @param max_connection_size [Integer] Minimum connection of TCP
     # @param interceptors [Array<GrpcKit::GRPC::ServerInterceptor>] list of interceptors
-    # @param settings [Array<DS9::Settings,Integer> list of HTTP2-Settings headers
+    # @param settings [Array<DS9::Settings,Integer>] list of HTTP2-Settings headers
     def initialize(min_pool_size:, max_pool_size:, min_connection_size:, max_connection_size:, interceptors: [], settings: [], **opts)
       @min_connection_size = min_connection_size
       @max_connection_size = max_connection_size
