@@ -16,6 +16,7 @@ module Griffin
       :min_pool_size,
       :max_connection_size,
       :min_connection_size,
+      :http2_settings,
     ].freeze
 
     GRPC_CONFIGS = %i[services interceptors].freeze
@@ -40,6 +41,7 @@ module Griffin
       min_connection_size: DEFAULT_CONNECTION_SIZE,
       interceptors: [],
       services: [],
+      http2_settings: [],
     }.freeze
 
     def initialize
@@ -66,6 +68,10 @@ module Griffin
     def connection_size(min, max)
       @opts[:min_connection_size] = Integer(min)
       @opts[:max_connection_size] = Integer(max)
+    end
+
+    def http2_settings(settings)
+      @opts[:http2_settings] = settings
     end
 
     def interceptors(*value)
