@@ -43,7 +43,7 @@ Griffin::Server.configure do |c|
 
   c.services GreeterServer.new
 
-  c.worker 2 # A number of worker process
+  c.workers 2 # A number of worker process
 end
 
 Griffin::Server.run
