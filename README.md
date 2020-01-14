@@ -1,5 +1,6 @@
 # Griffin
 
+[![Build Status](https://travis-ci.org/cookpad/griffin.svg?branch=master)](https://travis-ci.org/cookpad/griffin)
 [![Gem Version](https://badge.fury.io/rb/griffin.svg)](https://badge.fury.io/rb/griffin)
 
 Griffin is [gRPC](https://grpc.io/) server which supports multi process by using [serverengine](https://github.com/treasure-data/serverengine).
