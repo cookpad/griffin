@@ -12,6 +12,8 @@ module Griffin
           max_pool_size: config[:max_pool_size],
           min_connection_size: config[:min_connection_size],
           max_connection_size: config[:max_connection_size],
+          max_receive_message_size: config[:max_receive_message_size],
+          max_send_message_size: config[:max_send_message_size],
           interceptors: config[:interceptors],
           settings: config[:http2_settings],
         )
