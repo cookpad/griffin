@@ -16,6 +16,8 @@ module Griffin
       :min_pool_size,
       :max_connection_size,
       :min_connection_size,
+      :max_receive_message_size,
+      :max_send_message_size,
       :http2_settings,
     ].freeze
 
@@ -81,6 +83,15 @@ module Griffin
     def services(*value)
       @opts[:services].concat(value).flatten!
     end
+
+    def max_receive_message_size(value)
+      @opts[:max_receive_message_size] = Integer(value)
+    end
+
+    def max_send_message_size(value)
+      @opts[:max_send_message_size] = Integer(value)
+    end
+
 
     def build
       c = ServerConfig.new
