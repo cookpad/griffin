@@ -41,14 +41,16 @@ module Griffin
     # @param min_connection_size [Integer] Maximun connection of TCP
     # @param max_connection_size [Integer] Minimum connection of TCP
     # @param interceptors [Array<GrpcKit::GRPC::ServerInterceptor>] list of interceptors
+    # @param shutdown_timeout [Integer] Timeout for server shutdown in seconds
     # @param settings [Array<DS9::Settings,Integer>] list of HTTP2-Settings headers
     # @param max_receive_message_size [Integer, nil] Specify the default maximum size of inbound message in bytes. Default to 4MB.
     # @param max_send_message_size [Integer, nil] Specify the default maximum size of outbound message in bytes. Default to 4MB.
-    def initialize(min_pool_size:, max_pool_size:, min_connection_size:, max_connection_size:, interceptors: [], settings: [], max_receive_message_size: nil, max_send_message_size: nil, **opts)
+    def initialize(min_pool_size:, max_pool_size:, min_connection_size:, max_connection_size:, interceptors: [], shutdown_timeout: 30, settings: [], max_receive_message_size: nil, max_send_message_size: nil, **opts)
       @min_connection_size = min_connection_size
       @max_connection_size = max_connection_size
       @server = GrpcKit::Server.new(
         interceptors: interceptors,
+        shutdown_timeout: shutdown_timeout,
         min_pool_size: min_pool_size,
         max_pool_size: max_pool_size,
         max_receive_message_size: max_receive_message_size,
