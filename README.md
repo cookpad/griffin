@@ -52,7 +52,7 @@ Griffin::Server.run
 
 ## Interceptors
 
-* [cookpad/griffin-interceptors](https://github.com/cookpad/griffin-interceptors) colloection of interceptors
+* [cookpad/griffin-interceptors](https://github.com/cookpad/griffin-interceptors) collection of interceptors
 
 ## Development
 
