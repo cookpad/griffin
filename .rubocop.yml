@@ -42,7 +42,7 @@ Style/WhileUntilModifier:
   Enabled: false
 
 Naming/PredicateName:
-  NamePrefixBlacklist:
+  ForbiddenPrefixes:
     - "is_"
     - "have_"
   NamePrefix:
@@ -76,7 +76,7 @@ Metrics/AbcSize:
 Metrics/CyclomaticComplexity:
   Max: 10
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 160
 
 Metrics/MethodLength:
