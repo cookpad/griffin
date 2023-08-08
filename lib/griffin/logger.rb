@@ -24,9 +24,9 @@ module Griffin
       def logdev_from_config(config)
         case c = config[:log]
         when nil  # default
-          STDERR
+          $stderr
         when '-'
-          STDOUT
+          $stdout
         else
           c
         end

@@ -11,14 +11,14 @@ module Griffin
     DEFAULT_POOL_SIZE = 20
     DEFAULT_CONNECTION_SIZE = 3
 
-    GRIFFIN_CONFIGS = [
-      :max_pool_size,
-      :min_pool_size,
-      :max_connection_size,
-      :min_connection_size,
-      :max_receive_message_size,
-      :max_send_message_size,
-      :http2_settings,
+    GRIFFIN_CONFIGS = %i[
+      max_pool_size
+      min_pool_size
+      max_connection_size
+      min_connection_size
+      max_receive_message_size
+      max_send_message_size
+      http2_settings
     ].freeze
 
     GRPC_CONFIGS = %i[services interceptors].freeze
@@ -50,7 +50,7 @@ module Griffin
       @opts = DEFAULT_SERVER_CONFIG.dup
     end
 
-    (SERVERENGINE_PRIMITIVE_CONFIGS).each do |name|
+    SERVERENGINE_PRIMITIVE_CONFIGS.each do |name|
       define_method(name) do |value|
         @opts[name] = value
       end
@@ -91,7 +91,6 @@ module Griffin
     def max_send_message_size(value)
       @opts[:max_send_message_size] = Integer(value)
     end
-
 
     def build
       c = ServerConfig.new

@@ -56,7 +56,8 @@ module Griffin
     end
 
     # For GrpcKit::ThreadPool::AutoTrimmer
-    def trim(force = false)
+    # TODO: Change interface to use a keyword argument.
+    def trim(force = false) # rubocop:disable Style/OptionalBooleanParameter
       if @mutex.synchronize { (force || (@waiting > 0)) && (@spawned > @min_pool_size) }
         GrpcKit.logger.info("Trim worker! Next worker size #{@spawned - 1}")
         @tasks.push(nil)
@@ -86,7 +87,8 @@ module Griffin
           begin
             @block.call(task)
           rescue Exception => e # rubocop:disable Lint/RescueException
-            Griffin.logger.error("An error occured on top level in worker #{Thread.current.name}: #{e.message} (#{e.class})\n #{Thread.current.backtrace.join("\n")}  ")
+            backtrace = Thread.current.backtrace.join("\n")
+            Griffin.logger.error("An error occured on top level in worker #{Thread.current.name}: #{e.message} (#{e.class})\n #{backtrace}  ")
           end
         end
 

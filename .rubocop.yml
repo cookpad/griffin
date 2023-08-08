@@ -1,9 +1,11 @@
 AllCops:
   Exclude:
     - '**/**/*_pb.rb' # auto-generated
-    - "vendor/**/*"
+    - 'pb/grpc/health/checker.rb' # copied
+    - 'vendor/**/*'
   DisplayCopNames: true
-  TargetRubyVersion: 2.5
+  TargetRubyVersion: 3.0
+  NewCops: enable
 
 Style/AndOr:
   EnforcedStyle: conditionals
@@ -90,3 +92,6 @@ Metrics/ClassLength:
 
 Metrics/BlockLength:
   Max: 40
+
+Lint/DuplicateBranch:
+  IgnoreConstantBranches: true
