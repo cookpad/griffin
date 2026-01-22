@@ -9,7 +9,7 @@ class CallStream < GrpcKit::Call
   delegate %i[send_msg recv] => :@inner
 
   # @params call [GrpcKit::Call]
-  def initialize(inner)
+  def initialize(inner) # rubocop:disable Lint/MissingSuper
     @inner = inner
   end
 
@@ -17,7 +17,7 @@ class CallStream < GrpcKit::Call
     loop { yield(recv) }
   end
 
-  def method_missing(name, *args, &block)
-    @inner.public_send(name, *args, &block)
+  def method_missing(...) # rubocop:disable Style/MissingRespondToMissing
+    @inner.public_send(...)
   end
 end

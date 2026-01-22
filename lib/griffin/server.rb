@@ -45,7 +45,8 @@ module Griffin
     # @param settings [Array<DS9::Settings,Integer>] list of HTTP2-Settings headers
     # @param max_receive_message_size [Integer, nil] Specify the default maximum size of inbound message in bytes. Default to 4MB.
     # @param max_send_message_size [Integer, nil] Specify the default maximum size of outbound message in bytes. Default to 4MB.
-    def initialize(min_pool_size:, max_pool_size:, min_connection_size:, max_connection_size:, interceptors: [], shutdown_timeout: 30, settings: [], max_receive_message_size: nil, max_send_message_size: nil, **opts)
+    def initialize(min_pool_size:, max_pool_size:, min_connection_size:, max_connection_size:, interceptors: [], shutdown_timeout: 30, settings: [],
+                   max_receive_message_size: nil, max_send_message_size: nil, **opts)
       @min_connection_size = min_connection_size
       @max_connection_size = max_connection_size
       @server = GrpcKit::Server.new(
@@ -55,7 +56,7 @@ module Griffin
         max_pool_size: max_pool_size,
         max_receive_message_size: max_receive_message_size,
         max_send_message_size: max_send_message_size,
-        settings: settings
+        settings: settings,
       )
       @opts = opts
       @status = :run
@@ -104,8 +105,8 @@ module Griffin
         io = IO.select(@socks, [], [])
 
         io[0].each do |sock|
-          if sock == @command
-            break if handle_command
+          if sock == @command && handle_command
+            break
           end
 
           # @thread_pool.schedule could block and accepted socket would be timeout.

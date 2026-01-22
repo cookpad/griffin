@@ -8,7 +8,7 @@ require 'griffin/version'
 
 module Griffin
   def self.logger
-    @logger ||= Logger.new(STDOUT, level: :info)
+    @logger ||= Logger.new($stdout, level: :info)
   end
 
   def self.logger=(logger)

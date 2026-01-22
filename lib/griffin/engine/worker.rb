@@ -40,10 +40,10 @@ module Griffin
           st.trap(ServerEngine::Signals::GRACEFUL_RESTART) { |s| w.stop(s) }
           st.trap(ServerEngine::Signals::IMMEDIATE_RESTART, 'SIG_DFL')
 
-          st.trap(ServerEngine::Signals::RELOAD) {
+          st.trap(ServerEngine::Signals::RELOAD) do
             w.logger.reopen!
             w.reload
-          }
+          end
           st.trap(ServerEngine::Signals::DETACH) { |s| w.stop(s) }
 
           st.trap(ServerEngine::Signals::DUMP) { w.dump }

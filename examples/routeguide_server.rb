@@ -10,10 +10,10 @@ require 'routeguide_services_pb'
 class Server < Routeguide::RouteGuide::Service
   RESOURCE_PATH = './examples/routeguide/routeguide.json'
 
-  def initialize
+  def initialize # rubocop:disable Lint/MissingSuper
     File.open(RESOURCE_PATH) do |f|
       features = JSON.parse(f.read)
-      @features = Hash[features.map { |x| [x['location'], x['name']] }]
+      @features = features.to_h { |x| [x['location'], x['name']] }
     end
 
     @route_notes = Hash.new { |h, k| h[k] = [] }
@@ -98,7 +98,7 @@ class Server < Routeguide::RouteGuide::Service
 
     delta_lat = lat_a - lat_b
     delta_lon = lon_a - lon_b
-    a = Math.sin(delta_lat / 2)**2 + Math.cos(lat_a) * Math.cos(lat_b) + Math.sin(delta_lon / 2)**2
+    a = (Math.sin(delta_lat / 2)**2) + (Math.cos(lat_a) * Math.cos(lat_b)) + (Math.sin(delta_lon / 2)**2)
     (2 * RADIUS * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))).to_i
   end
 

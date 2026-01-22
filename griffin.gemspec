@@ -20,13 +20,10 @@ Gem::Specification.new do |spec|
   end
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
-  spec.require_paths = ['lib', 'pb']
+  spec.require_paths = %w[lib pb]
 
-  spec.add_development_dependency 'bundler'
-  spec.add_development_dependency 'pry-byebug'
-  spec.add_development_dependency 'rake'
-  spec.add_development_dependency 'rspec'
-  spec.add_development_dependency 'rubocop'
+  spec.metadata['rubygems_mfa_required'] = 'true'
+  spec.required_ruby_version             = Gem::Requirement.new('>= 3.0')
 
   spec.add_dependency 'grpc_kit', '>= 0.5.0'
   spec.add_dependency 'serverengine', '~> 2.0.7'
