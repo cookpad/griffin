@@ -10,6 +10,9 @@ require 'routeguide_services_pb'
 class Server < Routeguide::RouteGuide::Service
   RESOURCE_PATH = './examples/routeguide/routeguide.json'
 
+  COORD_FACTOR = 1e7
+  RADIUS = 637_100
+
   def initialize # rubocop:disable Lint/MissingSuper
     File.open(RESOURCE_PATH) do |f|
       features = JSON.parse(f.read)
@@ -86,9 +89,6 @@ class Server < Routeguide::RouteGuide::Service
   end
 
   private
-
-  COORD_FACTOR = 1e7
-  RADIUS = 637_100
 
   def calculate_distance(point_a, point_b)
     lat_a = (point_a.latitude / COORD_FACTOR) * Math::PI / 180
