@@ -23,7 +23,7 @@ module Griffin
 
       def logdev_from_config(config)
         case c = config[:log]
-        when nil  # default
+        when nil # default
           $stderr
         when '-'
           $stdout

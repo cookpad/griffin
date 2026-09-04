@@ -4,7 +4,7 @@ AllCops:
     - 'pb/grpc/health/checker.rb' # copied
     - 'vendor/**/*'
   DisplayCopNames: true
-  TargetRubyVersion: 3.0
+  TargetRubyVersion: 3.2
   NewCops: enable
 
 Style/AndOr:
@@ -42,14 +42,6 @@ Style/SafeNavigation:
 
 Style/WhileUntilModifier:
   Enabled: false
-
-Naming/PredicateName:
-  ForbiddenPrefixes:
-    - "is_"
-    - "have_"
-  NamePrefix:
-    - "is_"
-    - "have_"
 
 Style/SignalException:
   EnforcedStyle: only_raise

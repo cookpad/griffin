@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = %w[lib pb]
 
   spec.metadata['rubygems_mfa_required'] = 'true'
-  spec.required_ruby_version             = Gem::Requirement.new('>= 3.0')
+  spec.required_ruby_version             = Gem::Requirement.new('>= 3.2')
 
   spec.add_dependency 'google-protobuf', '>= 3.18.0'
   spec.add_dependency 'grpc_kit', '>= 0.5.0'

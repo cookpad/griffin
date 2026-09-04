@@ -6,6 +6,7 @@ require 'forwardable'
 class CallStream < GrpcKit::Call
   include Enumerable
   extend Forwardable
+
   delegate %i[send_msg recv] => :@inner
 
   # @params call [GrpcKit::Call]
