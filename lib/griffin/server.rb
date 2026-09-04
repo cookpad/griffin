@@ -9,6 +9,7 @@ require 'griffin/thread_pool'
 module Griffin
   class Server
     DEFAULT_BACKLOG_SIZE = 1024
+    POOL_FULL_RETRY_INTERVAL_SECOND = 0.1
 
     GRACEFUL_SHUTDOWN = '0'
     FORCIBLE_SHUTDOWN = '1'
@@ -102,6 +103,13 @@ module Griffin
 
     def handle_server
       while @status == :run
+        unless @thread_pool.resouce_available?
+          # A connection waiting to be accepted keeps the listening socket readable forever, so
+          # selecting on it while the pool is full would busy-loop until a connection is closed.
+          handle_command if @command.wait_readable(POOL_FULL_RETRY_INTERVAL_SECOND)
+          next
+        end
+
         io = IO.select(@socks, [], [])
 
         io[0].each do |sock|
